@@ -21,13 +21,14 @@ The goal was to optimize model performance through **feature selection, architec
   - `ASK_AMT`
 
 - **Removed Variables:**  
+  - `EIN`, `NAME` (Non-beneficial ID columns)
   - `STATUS` (Dropped due to potential redundancy)  
   - `SPECIAL_CONSIDERATIONS` (Dropped because it was mostly binary and uninformative after encoding)  
 
 - **Preprocessing Steps:**  
   - Low-frequency values in `APPLICATION_TYPE` and `CLASSIFICATION` were grouped into an **"Other"** category.
   - All categorical features were encoded using **`pd.get_dummies()`**.
-  - Numerical data was normalized using **`StandardScaler()`**.
+  - Data was normalized using **`StandardScaler()`**.
 
 ---
 
@@ -41,27 +42,35 @@ The goal was to optimize model performance through **feature selection, architec
 | Attempt  | Loss   | Accuracy |
 |----------|--------|----------|
 | **Initial Model**  | 0.5589  | 72.83% |
-| **Attempt 1 (Feature Refinement)**  | 0.562  | 72.84% |
-| **Attempt 2 (Increased Complexity)** | 0.5788  | 72.68% |
-| **Attempt 3 (Activation Function Tweaks)** | 0.5612  | 72.9% |
+| **Attempt 1 (Increased Complexity)**  | 0.562  | 72.84% |
+| **Attempt 2 (Activation Function Tweaks)** | 0.5583  | 72.76% |
+| **Attempt 3 (Feature Refinement)** | 0.5612  | 72.9% |
+| **Final Attempt (Combining strategies)** | 0.5753 | **73.05%** |
 
 #### **Optimization Attempts**
-1. **Attempt 1 - Feature Refinement:**  
-   - Dropped `STATUS` and `SPECIAL_CONSIDERATIONS`, as they were redundant or weak predictors.
-   - Expected improvement due to cleaner input data.  
-   - **Observed Outcome:** Minimal change, suggesting these features didn’t introduce much noise.
-
-2. **Attempt 2 - Increased Model Complexity:**  
+1. **Attempt 1 - Increased Model Complexity:**
    - Added a **third hidden layer** and increased neurons to **100 and 50** in earlier layers.
    - Expected improvement by capturing **more complex feature interactions**.
-   - **Observed Outcome:** No improvement; the loss slightly increased, indicating possible **overfitting**.
+   - **Observed Outcome:** No improvement, suggesting no capturing of more complex feature interactions.
 
-3. **Attempt 3 - Activation Function Tweaks:**  
+2. **Attempt 2 - Activation Function Tweaks:**  
    - Changed activation functions to **`tanh` and `leaky_relu`** for better gradient flow.
    - Adjusted the optimizer’s **learning rate** to improve convergence.  
    - **Observed Outcome:** No change, suggesting that activation functions were **not the main limiting factor**.
 
-Despite multiple adjustments, model accuracy **remained around 72.8%**, implying a potential need for a different modeling approach.
+3. **Attempt 3 - Feature Refinement:**  
+   - Dropped `STATUS` and `SPECIAL_CONSIDERATIONS`, as they were redundant or weak predictors.
+   - Expected improvement due to cleaner input data.  
+   - **Observed Outcome:** Minimal change, suggesting these features didn’t introduce much noise.
+
+4. **Final Attempt - Combining Strategies:** 
+   - Integrated all optimizations methods: **feature refinement, expanded architecture, and activation function adjustments.**
+   - Increased **neuron count** and **hidden layers** while keeping existing preprossing steps.
+   - **Observed Outcome:** Accuracy slightly improved to **73.05%**, suggesting some benefit from combining efforts.
+  
+![Model Accuracy Across Attempts](./screenshots/attempts_accuracy.png)
+
+Despite multiple adjustments, model accuracy **remained around 72-73%**, implying a potential need for a different modeling approach.
 
 ---
 
